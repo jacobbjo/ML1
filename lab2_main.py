@@ -3,6 +3,7 @@ from kernel import *
 import matplotlib as plt
 from scipy.optimize import minimize
 
+
 def pre_comp_matrix(m_inputs, v_target, kernel):
     """ Helpfunction to compute the values in the help matrix M_P
         ti*tj*kernel()
