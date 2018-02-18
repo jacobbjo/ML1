@@ -40,7 +40,7 @@ def generateInput():
     class2 = np.random.randn(20, 2) * 0.2 + [0.0, -0.5]
 
     inputs = np.concatenate((class1, class2))
-    targets = 
+    targets =
 
     return inputs
 
