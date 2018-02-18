@@ -36,8 +36,6 @@ def objective(v_alpha):
 
 M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
 
-# Looking for Bouble
-
 x = np.array([[1,2], [3,4]])
 y = np.array([2,3])
 z = np.array([1,2])
@@ -53,4 +51,3 @@ print(sum)
 #print("Multiply: ",str(np.multiply(x, y)))
 #print("dot: ", str(np.dot(x, y)))
 
-#Hipp hurra för här kommer bumbibjörnarna
