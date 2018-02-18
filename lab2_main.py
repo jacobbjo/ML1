@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from kernel import *
 import matplotlib as plt
 from scipy.optimize import minimize
@@ -33,19 +34,25 @@ def objective(v_alpha):
 
     return sum - alphaSum
 
+def generateInput():
+    class1 = np.concatenate((np.random.randn(10, 2)*0.2 + [1.5, 0.5],
+                            np.random.randn(10,2) * 0.2 + [-1.5, 0.5]))
+    class2 = np.random.randn(20, 2) * 0.2 + [0.0, -0.5]
 
-M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
+    inputs = np.concatenate((class1, class2))
+    targets = 
 
-# Looking for trouble
+    return inputs
 
-x = np.array([[1,2], [3,4]])
-y = np.array([2,3])
-z = np.array([1,2])
-sum = np.sum(x)
-#sumsum = np.sum(sum)
-print(sum)
-#print(sumsum)
 
+print(generateInput())
+#M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
+
+
+
+#x = np.array([[1,2], [3,4]])
+#y = np.array([2,3])
+#z = np.array([1,2])
 
 #print(x[:, 0])
 #print("* ", str(x*y))
