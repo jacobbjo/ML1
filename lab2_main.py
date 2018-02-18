@@ -5,9 +5,11 @@ from scipy.optimize import minimize
 
 M_P = []
 
+
 def pre_comp_matrix(m_inputs, v_target):
-    """ Helpfunction to compute the values in the help matrix M_P
-        ti*tj*kernel()
+    """
+    Helpfunction to compute the values in the help matrix M_P
+    ti*tj*kernel()
     """
     num_inputs = m_inputs.shape[0]
     m_result = np.zeros([num_inputs, num_inputs])
@@ -16,7 +18,6 @@ def pre_comp_matrix(m_inputs, v_target):
         for j in range(num_inputs):
             m_result[i, j] = kernel(m_inputs[:, i], m_inputs[:, j]) * v_target[i] * v_target[j]
     return m_result
-
 
 
 def objective(v_alpha):
