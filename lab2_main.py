@@ -34,8 +34,6 @@ def objective(v_alpha):
     return sum - alphaSum
 
 
-
-
 M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
 
 #Hej Jacob
