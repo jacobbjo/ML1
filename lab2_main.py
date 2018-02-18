@@ -1,11 +1,9 @@
 import numpy as np
+from kernel import *
 import matplotlib as plt
 from scipy.optimize import minimize
 
-
-M_P = []
-
-def pre_comp_matrix(m_inputs, v_target):
+def pre_comp_matrix(m_inputs, v_target, kernel):
     """ Helpfunction to compute the values in the help matrix M_P
         ti*tj*kernel()
     """
@@ -16,7 +14,6 @@ def pre_comp_matrix(m_inputs, v_target):
         for j in range(num_inputs):
             m_result[i, j] = kernel(m_inputs[:, i], m_inputs[:, j]) * v_target[i] * v_target[j]
     return m_result
-
 
 
 def objective(v_alpha):
@@ -34,6 +31,17 @@ def objective(v_alpha):
     alphaSum = np.sum(v_alpha)
 
     return sum - alphaSum
+
+
+
+
+M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
+
+
+
+
+
+
 
 x = np.array([[1,2], [3,4]])
 y = np.array([2,3])
