@@ -1,5 +1,5 @@
 import numpy as np
-from kernel import *
+import kernel as ker
 import matplotlib as plt
 from scipy.optimize import minimize
 
@@ -34,7 +34,7 @@ def objective(v_alpha):
     return sum - alphaSum
 
 
-M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
+M_P = pre_comp_matrix(m_inputs, v_target, ker.lin)
 
 x = np.array([[1,2], [3,4]])
 y = np.array([2,3])
