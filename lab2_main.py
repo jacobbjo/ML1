@@ -1,6 +1,5 @@
 import numpy as np
-import random
-from kernel import *
+import kernel as ker
 import matplotlib as plt
 from scipy.optimize import minimize
 
@@ -44,6 +43,7 @@ def generateInput():
 
     return inputs
 
+M_P = pre_comp_matrix(m_inputs, v_target, ker.lin)
 
 print(generateInput())
 #M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
@@ -60,4 +60,3 @@ print(generateInput())
 #print("Multiply: ",str(np.multiply(x, y)))
 #print("dot: ", str(np.dot(x, y)))
 
-#Hipp hurra för här kommer bumbibjörnarna
