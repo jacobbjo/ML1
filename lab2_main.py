@@ -52,3 +52,5 @@ print(sum)
 #print("* ", str(x*y*np.transpose(z)))
 #print("Multiply: ",str(np.multiply(x, y)))
 #print("dot: ", str(np.dot(x, y)))
+
+#Hipp hurra för här kommer bumbibjörnarna
