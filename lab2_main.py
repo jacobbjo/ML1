@@ -39,6 +39,7 @@ def objective(v_alpha):
 M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
 
 #Hej Jacob
+## this is jacob
 
 x = np.array([[1,2], [3,4]])
 y = np.array([2,3])
