@@ -7,7 +7,7 @@ import kernel as ker
 def generate_input(num):
     class1 = np.concatenate((np.random.randn(num//2, 2)*0.2 + [1.5, 0.5],
                             np.random.randn(num//2,2) * 0.2 + [-1.5, 0.5]))
-    class2 = np.random.randn(num, 2) * 0.2 + [0.0, -1.0]
+    class2 = np.random.randn(num, 2) * 0.2 + [0.0, -0.5]
 
     inputs = np.concatenate((class1, class2))
     targets = np.concatenate((np.ones((class1.shape[0], 1)), -np.ones((class2.shape[0], 1))))
@@ -60,10 +60,11 @@ def indicator(alphas, targets, s, x, b):
     The indicator function which uses the non-zero
     α i ’s together with their ⃗x i ’s and t i ’s to classify new points.
     """
+    print(s)
     ind_out = 0
     for i in range(len(alphas)):
         ind_out += alphas[i]*targets[i]*ker.lin(s, x[i]) - b
-
+    print(ind_out)
     return ind_out
 
 
@@ -72,5 +73,4 @@ def calc_b(alphas, targets, inputs, kernel):
     sum = 0
     for i in range(len(alphas)):
         sum += alphas[i]*targets[i]*kernel(s, inputs[i])
-
     return sum - targets[0]
