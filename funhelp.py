@@ -52,3 +52,8 @@ def extract_non_zeros(alphas, thresh=1e-5):
 
     return extracted_alphas, indices
 
+
+def calc_b(alphas, targets, inputs):
+    s = inputs[0, :]
+    print(s)
+

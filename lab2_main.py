@@ -49,6 +49,7 @@ def main():
 
     new_alphas, indices = extract_non_zeros(ret["x"])
     new_targets = [TARGET[i, 0] for i in indices]
+    new_inputs = [INPUTS[i, :] for i in indices]
 
     print(new_alphas)
     print(new_targets)
