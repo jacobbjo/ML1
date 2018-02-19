@@ -53,6 +53,7 @@ def main():
 
     print(new_alphas)
     print(new_targets)
+    calc_b(new_alphas, new_targets, new_inputs)
 
     plt.axis("equal")
     plt.show()
