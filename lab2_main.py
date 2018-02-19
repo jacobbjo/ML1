@@ -1,25 +1,10 @@
-import numpy as np
-import random
 import kernel as ker
-import matplotlib.pyplot as plt
+from funhelp import *
 from scipy.optimize import minimize
 
-
-
-def pre_comp_matrix(m_inputs, v_target, kernel):
-    """ Helpfunction to compute the values in the help matrix M_P
-        ti*tj*kernel()
-    """
-    num_inputs = m_inputs.shape[0]
-    m_result = np.zeros([num_inputs, num_inputs])
-
-    for i in range(num_inputs):
-        for j in range(num_inputs):
-            #print(kernel(m_inputs[i, :], m_inputs[j, :]))
-            #print(v_target[i])
-            #print(v_target[j])
-            m_result[i, j] = kernel(m_inputs[i, :], m_inputs[j, :]) * v_target[i] * v_target[j]
-    return m_result
+# GLOBAL VARIABLES
+INPUTS, TARGET = generate_input(20)
+M_P = pre_comp_matrix(INPUTS, TARGET, ker.lin)
 
 
 def objective(v_alpha):
@@ -39,47 +24,6 @@ def objective(v_alpha):
     alphaSum = np.sum(v_alpha)
     return sum - alphaSum
 
-def generateInput(num):
-    class1 = np.concatenate((np.random.randn(num//2, 2)*0.2 + [1.5, 0.5],
-                            np.random.randn(num//2,2) * 0.2 + [-1.5, 0.5]))
-    class2 = np.random.randn(num, 2) * 0.2 + [0.0, -1.0]
-
-    inputs = np.concatenate((class1, class2))
-    targets = np.concatenate((np.ones((class1.shape[0], 1)), -np.ones((class2.shape[0], 1))))
-    # Shuffles the inputs with permutations
-    num_inputs = inputs.shape[0]
-    permute = list(range(num_inputs))
-    random.shuffle(permute)
-    inputs = inputs[permute, :]
-    targets = targets[permute, :]
-
-    plt.plot([p[0] for p in class1], [p[1] for p in class1], "o", c= "b")
-    plt.plot([p[0] for p in class2], [p[1] for p in class2], "o", c= "r")
-
-    return inputs, targets
-
-
-m_inputs, TARGET = generateInput(20)
-M_P = pre_comp_matrix(m_inputs, TARGET, ker.lin)
-
-def main():
-
-    C = 1
-    N = m_inputs.shape[0]
-
-    #v_alpha_init = np.random.randn(N, 1)
-    v_alpha_init = np.zeros(N)
-
-    bounds = [(0,C) for b in range(N)]
-
-    ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type":"eq", "fun": zerofun}) #,options={'xtol': 1e-8, 'disp': True})
-    print(ret["x"])
-    print(ret["success"])
-
-    plt.axis("equal")
-    plt.show()
-
-
 
 def zerofun(alpha):
     """
@@ -89,6 +33,28 @@ def zerofun(alpha):
     """
     result = np.dot(np.transpose(alpha), TARGET)
     return result
+
+
+def main():
+    C = 1
+    N = INPUTS.shape[0]
+
+    v_alpha_init = np.zeros(N)
+
+    bounds = [(0, C) for b in range(N)]
+
+    ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type": "eq", "fun": zerofun})
+    print(ret["x"])
+    print(ret["success"])
+
+    new_alphas, indices = extract_non_zeros(ret["x"])
+    new_targets = [TARGET[i, 0] for i in indices]
+
+    print(new_alphas)
+    print(new_targets)
+
+    plt.axis("equal")
+    plt.show()
 
 
 if __name__ == "__main__":
