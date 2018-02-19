@@ -74,7 +74,3 @@ def calc_b(alphas, targets, inputs, kernel):
         sum += alphas[i]*targets[i]*kernel(s, inputs[i])
 
     return sum - targets[0]
-
-
-
-
