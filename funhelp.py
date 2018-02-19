@@ -1,7 +1,6 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-import kernel as ker
 
 
 def generate_input(num):
@@ -55,7 +54,7 @@ def extract_non_zeros(alphas, thresh=1e-5):
     return extracted_alphas, indices
 
 
-def indicator(alphas, targets, s, x, b):
+def indicator(alphas, targets, s, x, b, kernel):
     """
     The indicator function which uses the non-zero
     α i ’s together with their ⃗x i ’s and t i ’s to classify new points.
@@ -63,12 +62,14 @@ def indicator(alphas, targets, s, x, b):
     print(s)
     ind_out = 0
     for i in range(len(alphas)):
-        ind_out += alphas[i]*targets[i]*ker.lin(s, x[i]) - b
-    print(ind_out)
+        ind_out += alphas[i]*targets[i]*kernel(s, x[i]) - b
+
+
     return ind_out
 
 
 def calc_b(alphas, targets, inputs, kernel):
+    """ Calculate the b value using equation (7) """
     s = inputs[0]
     sum = 0
     for i in range(len(alphas)):
