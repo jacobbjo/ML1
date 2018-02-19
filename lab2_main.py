@@ -27,6 +27,8 @@ def objective(v_alpha):
     Computes 1/2(sum(sum(alphai*alphaj*targeti*targetj*Kerner(xi, xj))) - sum(alphai)
     Use global values for kernel and values and targets
     """
+    # reshape because a_alpha has shape (N,)
+    v_alpha = np.reshape(v_alpha, [v_alpha.shape[0], 1])
     # Matrix for combinations of the alphas
     m_alpha = np.dot(v_alpha, np.transpose(v_alpha))
     # alpha values multiplied with the target and kernel values
@@ -37,10 +39,10 @@ def objective(v_alpha):
     alphaSum = np.sum(v_alpha)
     return sum - alphaSum
 
-def generateInput():
-    class1 = np.concatenate((np.random.randn(10, 2)*0.2 + [1.5, 0.5],
-                            np.random.randn(10,2) * 0.2 + [-1.5, 0.5]))
-    class2 = np.random.randn(20, 2) * 0.2 + [0.0, -0.5]
+def generateInput(num):
+    class1 = np.concatenate((np.random.randn(num//2, 2)*0.2 + [1.5, 0.5],
+                            np.random.randn(num//2,2) * 0.2 + [-1.5, 0.5]))
+    class2 = np.random.randn(num, 2) * 0.2 + [0.0, -1.0]
 
     inputs = np.concatenate((class1, class2))
     targets = np.concatenate((np.ones((class1.shape[0], 1)), -np.ones((class2.shape[0], 1))))
@@ -57,20 +59,20 @@ def generateInput():
     return inputs, targets
 
 
-m_inputs, TARGET = generateInput()
+m_inputs, TARGET = generateInput(20)
 M_P = pre_comp_matrix(m_inputs, TARGET, ker.lin)
 
 def main():
 
-    C = None
+    C = 1
     N = m_inputs.shape[0]
 
     #v_alpha_init = np.random.randn(N, 1)
-    v_alpha_init = np.zeros([N, 1])
+    v_alpha_init = np.zeros(N)
 
     bounds = [(0,C) for b in range(N)]
 
-    ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type":"eq", "fun": zerofun})#,options={'xtol': 1e-8, 'disp': True})
+    ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type":"eq", "fun": zerofun}) #,options={'xtol': 1e-8, 'disp': True})
     print(ret["x"])
     print(ret["success"])
 
@@ -85,10 +87,8 @@ def zerofun(alpha):
     Like objective, zerofun takes a vector alpha and a target
     as argument and returns a scalar value.
     """
-    result = np.dot(alpha, TARGET)
+    result = np.dot(np.transpose(alpha), TARGET)
     return result
-
-
 
 
 if __name__ == "__main__":
