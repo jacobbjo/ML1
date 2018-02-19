@@ -44,16 +44,16 @@ def main():
     bounds = [(0, C) for b in range(N)]
 
     ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type": "eq", "fun": zerofun})
-    print(ret["x"])
     print(ret["success"])
 
     new_alphas, indices = extract_non_zeros(ret["x"])
-    new_targets = [TARGET[i, 0] for i in indices]
-    new_inputs = [INPUTS[i, :] for i in indices]
+    new_targets = np.array([TARGET[i, 0] for i in indices])
+    new_inputs = np.array([INPUTS[i, :] for i in indices])
 
-    print(new_alphas)
-    print(new_targets)
-    calc_b(new_alphas, new_targets, new_inputs)
+    #print(new_alphas)
+    #print(new_targets)
+    b = calc_b(new_alphas, new_targets, new_inputs, ker.lin)
+    print(b)
 
     plt.axis("equal")
     plt.show()
