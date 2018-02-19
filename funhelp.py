@@ -59,7 +59,6 @@ def indicator(alphas, targets, s, x, b, kernel):
     The indicator function which uses the non-zero
     α i ’s together with their ⃗x i ’s and t i ’s to classify new points.
     """
-    print(s)
     ind_out = 0
     for i in range(len(alphas)):
         ind_out += alphas[i]*targets[i]*kernel(s, x[i]) - b

@@ -3,7 +3,7 @@ from funhelp import *
 from scipy.optimize import minimize
 
 # GLOBAL VARIABLES
-INPUTS, TARGET = generate_input(20)
+INPUTS, TARGET = generate_input(40)
 M_P = pre_comp_matrix(INPUTS, TARGET, ker.lin)
 
 
@@ -36,7 +36,7 @@ def zerofun(alpha):
 
 
 def main():
-    C = 1
+    C = None
     N = INPUTS.shape[0]
 
     v_alpha_init = np.zeros(N)
@@ -55,6 +55,16 @@ def main():
     b = calc_b(new_alphas, new_targets, new_inputs, ker.lin)
     print(b)
 
+    plt.plot([x[0] for x in new_inputs], [y[1] for y in new_inputs], "o", c="g")
+
+    xgrid = np.linspace(-5, 5)
+    #print(xgrid)
+    ygrid = np.linspace(-4, 4)
+    X, Y = np.meshgrid(xgrid, ygrid)
+    grid = np.array([[indicator(new_alphas, new_targets, [x, y], new_inputs, b, ker.lin) for x in xgrid] for y in ygrid])
+    #print(grid)
+
+    plt.contour(X, Y, grid, (-1.0, 0.0, 1.0), colors = ("red", "black", "blue"), linewidths = (1, 3, 1))
     plt.axis("equal")
     plt.show()
 
