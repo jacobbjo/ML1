@@ -55,14 +55,14 @@ def extract_non_zeros(alphas, thresh=1e-5):
     return extracted_alphas, indices
 
 
-def indicator(alphas, targets, b, s, x):
+def indicator(alphas, targets, s, x, b):
     """
     The indicator function which uses the non-zero
     α i ’s together with their ⃗x i ’s and t i ’s to classify new points.
     """
     ind_out = 0
     for i in range(len(alphas)):
-        ind_out += alphas[i]*targets[i]*ker.lin(s, x) - b
+        ind_out += alphas[i]*targets[i]*ker.lin(s, x[i]) - b
 
     return ind_out
 
