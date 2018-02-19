@@ -1,7 +1,9 @@
 import numpy as np
+import random
 import kernel as ker
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+
 
 
 def pre_comp_matrix(m_inputs, v_target, kernel):
@@ -13,7 +15,10 @@ def pre_comp_matrix(m_inputs, v_target, kernel):
 
     for i in range(num_inputs):
         for j in range(num_inputs):
-            m_result[i, j] = kernel(m_inputs[:, i], m_inputs[:, j]) * v_target[i] * v_target[j]
+            #print(kernel(m_inputs[i, :], m_inputs[j, :]))
+            #print(v_target[i])
+            #print(v_target[j])
+            m_result[i, j] = kernel(m_inputs[i, :], m_inputs[j, :]) * v_target[i] * v_target[j]
     return m_result
 
 
@@ -30,7 +35,6 @@ def objective(v_alpha):
     sum = np.sum(m_mult)/2
 
     alphaSum = np.sum(v_alpha)
-
     return sum - alphaSum
 
 def generateInput():
@@ -39,14 +43,57 @@ def generateInput():
     class2 = np.random.randn(20, 2) * 0.2 + [0.0, -0.5]
 
     inputs = np.concatenate((class1, class2))
-    targets =
+    targets = np.concatenate((np.ones((class1.shape[0], 1)), -np.ones((class2.shape[0], 1))))
+    # Shuffles the inputs with permutations
+    num_inputs = inputs.shape[0]
+    permute = list(range(num_inputs))
+    random.shuffle(permute)
+    inputs = inputs[permute, :]
+    targets = targets[permute, :]
 
-    return inputs
+    plt.plot([p[0] for p in class1], [p[1] for p in class1], "o", c= "b")
+    plt.plot([p[0] for p in class2], [p[1] for p in class2], "o", c= "r")
 
-M_P = pre_comp_matrix(m_inputs, v_target, ker.lin)
+    return inputs, targets
 
-print(generateInput())
-#M_P = pre_comp_matrix(m_inputs, v_target, ker_lin)
+
+m_inputs, TARGET = generateInput()
+M_P = pre_comp_matrix(m_inputs, TARGET, ker.lin)
+
+def main():
+
+    C = None
+    N = m_inputs.shape[0]
+
+    #v_alpha_init = np.random.randn(N, 1)
+    v_alpha_init = np.zeros([N, 1])
+
+    bounds = [(0,C) for b in range(N)]
+
+    ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type":"eq", "fun": zerofun})#,options={'xtol': 1e-8, 'disp': True})
+    print(ret["x"])
+    print(ret["success"])
+
+    plt.axis("equal")
+    plt.show()
+
+
+
+def zerofun(alpha):
+    """
+    Calculates the value which should be constrained to zero.
+    Like objective, zerofun takes a vector alpha and a target
+    as argument and returns a scalar value.
+    """
+    result = np.dot(alpha, TARGET)
+    return result
+
+
+
+
+if __name__ == "__main__":
+    main()
+
 
 
 

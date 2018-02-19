@@ -4,11 +4,12 @@ import numpy as np
 # Also here, you can make use of numpy.dot to be efficient.
 
 
-def zerofun(alpha, target):
+def zerofun(alpha):
     """
     Calculates the value which should be constrained to zero.
     Like objective, zerofun takes a vector alpha and a target
     as argument and returns a scalar value.
     """
-    return np.dot(np.transpose(alpha), target)
+    print(alpha)
+    return np.dot(np.transpose(alpha), )
 
