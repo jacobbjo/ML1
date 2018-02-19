@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import kernel as ker
 
 
 def generate_input(num):
@@ -24,8 +25,9 @@ def generate_input(num):
 
 
 def pre_comp_matrix(m_inputs, v_target, kernel):
-    """ Helpfunction to compute the values in the help matrix M_P
-        ti*tj*kernel()
+    """
+    Helpfunction to compute the values in the help matrix M_P
+    ti*tj*kernel()
     """
     num_inputs = m_inputs.shape[0]
     m_result = np.zeros([num_inputs, num_inputs])
@@ -51,6 +53,18 @@ def extract_non_zeros(alphas, thresh=1e-5):
             indices.append(ind)
 
     return extracted_alphas, indices
+
+
+def indicator(alphas, targets, b, s, x):
+    """
+    The indicator function which uses the non-zero
+    α i ’s together with their ⃗x i ’s and t i ’s to classify new points.
+    """
+    ind_out = 0
+    for i in range(len(alphas)):
+        ind_out += alphas[i]*targets[i]*ker.lin(s, x) - b
+
+    return ind_out
 
 
 def calc_b(alphas, targets, inputs):
