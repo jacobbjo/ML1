@@ -67,7 +67,14 @@ def indicator(alphas, targets, b, s, x):
     return ind_out
 
 
-def calc_b(alphas, targets, inputs):
+def calc_b(alphas, targets, inputs, kernel):
     s = inputs[0]
-    print(s)
+    sum = 0
+    for i in range(len(alphas)):
+        sum += alphas[i]*targets[i]*kernel(s, inputs[i])
+
+    return sum - targets[0]
+
+
+
 
