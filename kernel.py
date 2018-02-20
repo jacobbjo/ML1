@@ -17,7 +17,7 @@ def lin(v_x, v_y):
     return np.dot(np.transpose(v_x),  v_y)
 
 
-def pol(v_x, v_y, p):
+def pol(v_x, v_y, p = 2):
     """
     This kernel allows for curved decision boundaries. The exponent p (a
     positive integer) controls the degree of the polynomials. p = 2 will make
@@ -27,7 +27,7 @@ def pol(v_x, v_y, p):
     return (np.dot(np.transpose(v_x),  v_y) + 1)**p
 
 
-def rbf(v_x, v_y, sigma):
+def rbf(v_x, v_y, sigma = 3):
     """
     This kernel uses the explicit euclidian distance between the two datapoints,
     and often results in very good boundaries. The parameter σ is used to

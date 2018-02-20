@@ -3,8 +3,13 @@ from funhelp import *
 from scipy.optimize import minimize
 
 # GLOBAL VARIABLES
-INPUTS, TARGET = generate_input(40)
-M_P = pre_comp_matrix(INPUTS, TARGET, ker.lin)
+#INPUTS, TARGET = generate_lin_input(20, 0.4)
+INPUTS, TARGET = generate_nonlin_input(40, 0.2)
+#INPUTS, TARGET = generate_circle_input(20, 0.2)
+
+KERNEL = ker.rbf
+M_P = pre_comp_matrix(INPUTS, TARGET, KERNEL)
+
 
 
 def objective(v_alpha):
@@ -45,27 +50,35 @@ def main():
 
     ret = minimize(objective, v_alpha_init, bounds=bounds, constraints={"type": "eq", "fun": zerofun})
     print(ret["success"])
+    if ret["success"]:
+        new_alphas, indices = extract_non_zeros(ret["x"])
+        new_targets = np.array([TARGET[i, 0] for i in indices])
+        new_inputs = np.array([INPUTS[i, :] for i in indices])
 
-    new_alphas, indices = extract_non_zeros(ret["x"])
-    new_targets = np.array([TARGET[i, 0] for i in indices])
-    new_inputs = np.array([INPUTS[i, :] for i in indices])
+        #print(new_alphas)
+        #print(new_targets)
+        b = calc_b(new_alphas, new_targets, new_inputs, KERNEL)
+        print(b)
 
-    #print(new_alphas)
-    #print(new_targets)
-    b = calc_b(new_alphas, new_targets, new_inputs, ker.lin)
-    print(b)
+        plt.plot([x[0] for x in new_inputs], [y[1] for y in new_inputs], "o", c="g")
 
-    plt.plot([x[0] for x in new_inputs], [y[1] for y in new_inputs], "o", c="g")
+        xgrid = np.linspace(-5, 5)
+        #print(xgrid)
+        ygrid = np.linspace(-4, 4)
+        X, Y = np.meshgrid(xgrid, ygrid)
+        grid = np.array([[indicator(new_alphas, new_targets, [x, y], new_inputs, b, KERNEL) for x in xgrid] for y in ygrid])
 
-    xgrid = np.linspace(-5, 5)
-    #print(xgrid)
-    ygrid = np.linspace(-4, 4)
-    X, Y = np.meshgrid(xgrid, ygrid)
-    grid = np.array([[indicator(new_alphas, new_targets, [x, y], new_inputs, b, ker.lin) for x in xgrid] for y in ygrid])
-    #print(grid)
+        #plt.plot(X, grid, "o")
+        #plt.plot(Y, grid, "o")
 
-    plt.contour(X, Y, grid, (-1.0, 0.0, 1.0), colors = ("red", "black", "blue"), linewidths = (1, 3, 1))
-    plt.axis("equal")
+
+        plt.contour(X, Y, grid, (-1.0, 0.0, 1.0), colors = ("red", "black", "blue"), linewidths = (1, 3, 1))
+        #plt.contour(X, (1.0))
+
+
+        plt.axis("equal")
+    else:
+        print("Could not minimize")
     plt.show()
 
 
