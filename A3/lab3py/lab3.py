@@ -82,6 +82,7 @@ def mlParams(X, labels, W=None):
         diff = classValues - classMu
         for row in diff:
             row = row.reshape(1, row.shape[0])
+            # #### Change, only the diagonal should have values (page 6)
             classSigma = np.dot(np.transpose(row), row)/classValues.shape[0]
             sigma[classIndx] += classSigma
 
@@ -160,7 +161,7 @@ testClassifier(BayesClassifier(), dataset='vowel', split=0.7)
 
 
 
-#plotBoundary(BayesClassifier(), dataset='iris',split=0.7)
+plotBoundary(BayesClassifier(), dataset='iris',split=0.7)
 
 
 # ## Boosting functions to implement
