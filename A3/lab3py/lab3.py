@@ -44,7 +44,11 @@ def computePrior(labels, W=None):
 
     # TODO: compute the values of prior for each class!
     # ==========================
-    
+    for classIndx, aClass in enumerate(classes):
+        indx = np.where(labels == aClass)
+        numClass = np.size(indx)
+        prior[classIndx] = numClass/Npts
+
     # ==========================
 
     return prior
@@ -55,8 +59,8 @@ def computePrior(labels, W=None):
 # out:    mu - C x d matrix of class means (mu[i] - class i mean)
 #      sigma - C x d x d matrix of class covariances (sigma[i] - class i sigma)
 def mlParams(X, labels, W=None):
-    assert(X.shape[0]==labels.shape[0])
-    Npts,Ndims = np.shape(X)
+    assert(X.shape[0] == labels.shape[0])  # Asserts that they have the same number of rows
+    Npts, Ndims = np.shape(X)
     classes = np.unique(labels)
     Nclasses = np.size(classes)
 
@@ -68,7 +72,19 @@ def mlParams(X, labels, W=None):
 
     # TODO: fill in the code to compute mu and sigma!
     # ==========================
-    
+    # Compute the mu values and then the sigma values
+    for classIndx, aClass in enumerate(classes):
+        indx = np.where(labels == aClass)  # Extracts the indices for the specified class
+        classValues = X[indx, :][0]  # Extracts the rows from the data corresponding to the specified class
+        classMu = np.sum(classValues, 0)/classValues.shape[0]
+        mu[classIndx] = classMu
+        # Compute the sigma for the specified class
+        diff = classValues - classMu
+        for row in diff:
+            row = row.reshape(1, row.shape[0])
+            classSigma = np.dot(np.transpose(row), row)/classValues.shape[0]
+            sigma[classIndx] += classSigma
+
     # ==========================
 
     return mu, sigma
@@ -86,12 +102,21 @@ def classifyBayes(X, prior, mu, sigma):
 
     # TODO: fill in the code to compute the log posterior logProb!
     # ==========================
-    
+    for classIndx in range(Nclasses):
+        for dataIndx, dataRow in enumerate(X):
+            first = (-1/2)*np.log(np.linalg.norm(sigma[classIndx]))
+            second = (1/2)*np.dot((dataRow - mu[classIndx]),
+                                  np.dot(np.linalg.inv(sigma[classIndx]), np.transpose(dataRow - mu[classIndx])))
+            third = np.log(prior[classIndx])
+
+            discFunc = first - second + third
+            logProb[classIndx, dataIndx] = discFunc
+
     # ==========================
     
     # one possible way of finding max a-posteriori once
     # you have computed the log posterior
-    h = np.argmax(logProb,axis=0)
+    h = np.argmax(logProb, axis=0)
     return h
 
 
@@ -119,19 +144,19 @@ class BayesClassifier(object):
 # Call `genBlobs` and `plotGaussian` to verify your estimates.
 
 
-X, labels = genBlobs(centers=5)
-mu, sigma = mlParams(X,labels)
-plotGaussian(X,labels,mu,sigma)
+#X, labels = genBlobs(centers=5)
+#mu, sigma = mlParams(X,labels)
+#plotGaussian(X,labels,mu,sigma)
 
 
 # Call the `testClassifier` and `plotBoundary` functions for this part.
 
 
-#testClassifier(BayesClassifier(), dataset='iris', split=0.7)
+testClassifier(BayesClassifier(), dataset='iris', split=0.7)
 
 
 
-#testClassifier(BayesClassifier(), dataset='vowel', split=0.7)
+testClassifier(BayesClassifier(), dataset='vowel', split=0.7)
 
 
 

@@ -6,4 +6,3 @@ def ml_params(X, labels):
     sigma_k =
 
     return micro_k, sigma_k
-    
