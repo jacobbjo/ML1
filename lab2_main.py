@@ -3,11 +3,11 @@ from funhelp import *
 from scipy.optimize import minimize
 
 # GLOBAL VARIABLES
-#INPUTS, TARGET = generate_lin_input(20, 0.4)
-INPUTS, TARGET = generate_nonlin_input(40, 0.2)
+INPUTS, TARGET = generate_lin_input(20, 0.4)
+#INPUTS, TARGET = generate_nonlin_input(40, 0.2)
 #INPUTS, TARGET = generate_circle_input(20, 0.2)
 
-KERNEL = ker.rbf
+KERNEL = ker.pol
 M_P = pre_comp_matrix(INPUTS, TARGET, KERNEL)
 
 
@@ -60,7 +60,7 @@ def main():
         b = calc_b(new_alphas, new_targets, new_inputs, KERNEL)
         print(b)
 
-        plt.plot([x[0] for x in new_inputs], [y[1] for y in new_inputs], "o", c="g")
+        #plt.plot([x[0] for x in new_inputs], [y[1] for y in new_inputs], "o", c="g")
 
         xgrid = np.linspace(-5, 5)
         #print(xgrid)
