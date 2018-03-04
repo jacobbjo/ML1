@@ -37,6 +37,7 @@ def computePrior(labels, W=None):
         W = np.ones((Npts,1))/Npts
     else:
         assert(W.shape[0] == Npts)
+
     Npts += np.sum(W, 0)
     classes = np.unique(labels)
     Nclasses = np.size(classes)
@@ -49,7 +50,6 @@ def computePrior(labels, W=None):
         indx = np.where(labels == aClass)
         classWeights = W[indx, :][0]
         numClass = np.size(indx) + np.sum(classWeights, 0)
-        print(numClass)
         prior[classIndx] = numClass/Npts
 
     # ==========================
@@ -191,6 +191,13 @@ def trainBoost(base_classifier, X, labels, T=10):
     # The weights for the first iteration
     wCur = np.ones((Npts,1))/float(Npts)
 
+    def delta(hypo, trueClass):
+        deltas = np.zeros((hypo.shape[0], 1))
+        for i in range(hypo.shape[0]):
+            if hypo[i] == trueClass[i]:
+                deltas[i] = 1
+        return deltas
+
     for i_iter in range(0, T):
         # a new classifier can be trained like this, given the current weights
         classifiers.append(base_classifier.trainClassifier(X, labels, wCur))
@@ -200,10 +207,21 @@ def trainBoost(base_classifier, X, labels, T=10):
 
         # TODO: Fill in the rest, construct the alphas etc.
         # ==========================
-        
-        # alphas.append(alpha) # you will need to append the new alpha
+        deltas = delta(vote, labels)
+        error = np.sum(wCur * (1-deltas))
+        alphons = (1/2)*(np.log(1-error)-np.log(error))
+        alphas.append(alphons)  # you will need to append the new alpha
+
+        for i in range(deltas.shape[0]):
+            if deltas[i] == 1:
+                wCur[i] = wCur[i] * np.exp(-alphas[-1])
+            else:
+                wCur[i] = wCur[i] * np.exp(alphas[-1])
+
+        # Normalizes with the sum, so that the sum = 1
+        wCur /= np.sum(wCur, 0)
+
         # ==========================
-        
     return classifiers, alphas
 
 # in:       X - N x d matrix of N data points
@@ -224,11 +242,15 @@ def classifyBoost(X, classifiers, alphas, Nclasses):
         # TODO: implement classificiation when we have trained several classifiers!
         # here we can do it by filling in the votes vector with weighted votes
         # ==========================
-        
+        for cIndx, classifier in enumerate(classifiers):
+            classification = classifier.classify(X)
+            for dIndx in range(Npts):
+                votes[dIndx][classification[dIndx]] += alphas[cIndx]
+
         # ==========================
 
         # one way to compute yPred after accumulating the votes
-        return np.argmax(votes,axis=1)
+        return np.argmax(votes, axis=1)
 
 
 # The implemented functions can now be summarized another classifer, the `BoostClassifier` class. This class enables boosting different types of classifiers by initializing it with the `base_classifier` argument. No need to add anything here.
@@ -261,7 +283,7 @@ class BoostClassifier(object):
 
 
 
-#testClassifier(BoostClassifier(BayesClassifier(), T=10), dataset='vowel',split=0.7)
+testClassifier(BoostClassifier(BayesClassifier(), T=10), dataset='vowel',split=0.7)
 
 
 
