@@ -37,7 +37,6 @@ def computePrior(labels, W=None):
         W = np.ones((Npts,1))/Npts
     else:
         assert(W.shape[0] == Npts)
-    Npts += np.sum(W, 0)
     classes = np.unique(labels)
     Nclasses = np.size(classes)
 
@@ -47,9 +46,7 @@ def computePrior(labels, W=None):
     # ==========================
     for classIndx, aClass in enumerate(classes):
         indx = np.where(labels == aClass)
-        classWeights = W[indx, :][0]
-        numClass = np.size(indx) + np.sum(classWeights, 0)
-        print(numClass)
+        numClass = np.size(indx)
         prior[classIndx] = numClass/Npts
 
     # ==========================
@@ -79,15 +76,15 @@ def mlParams(X, labels, W=None):
     for classIndx, aClass in enumerate(classes):
         indx = np.where(labels == aClass)  # Extracts the indices for the specified class
         classValues = X[indx, :][0]  # Extracts the rows from the data corresponding to the specified class
-        classWeightValues = W[indx, :][0]
-        classMu = np.sum(classValues*classWeightValues, 0)/np.sum(classWeightValues, 0)
+        classMu = np.sum(classValues, 0)/classValues.shape[0]
         mu[classIndx] = classMu
         # Compute the sigma for the specified class
         diff = classValues - classMu
-        for rindx, row in enumerate(diff):
+        for row in diff:
+
             row = row.reshape(1, row.shape[0])
             # #### Change, only the diagonal should have values (page 6)
-            classSigma = classWeightValues[rindx]*np.dot(np.transpose(row), row)/np.sum(classWeightValues, 0)
+            classSigma = np.dot(np.transpose(row), row)/classValues.shape[0]
             diag = np.diag(classSigma)
             diag = np.diag(diag)
             sigma[classIndx] += diag
@@ -159,15 +156,15 @@ class BayesClassifier(object):
 # Call the `testClassifier` and `plotBoundary` functions for this part.
 
 
-#testClassifier(BayesClassifier(), dataset='iris', split=0.7)
+testClassifier(BayesClassifier(), dataset='iris', split=0.7)
 
 
 
-#testClassifier(BayesClassifier(), dataset='vowel', split=0.7)
+testClassifier(BayesClassifier(), dataset='vowel', split=0.7)
 
 
 
-#plotBoundary(BayesClassifier(), dataset='iris',split=0.7)
+plotBoundary(BayesClassifier(), dataset='iris',split=0.7)
 
 
 # ## Boosting functions to implement
