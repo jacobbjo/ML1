@@ -229,8 +229,8 @@ def plotBoundary(classifier, dataset='iris', split=0.7):
     # Train
     trained_classifier = classifier.trainClassifier(xTr, yTr)
 
-    xRange = np.arange(np.min(pX[:,0]),np.max(pX[:,0]),np.abs(np.max(pX[:,0])-np.min(pX[:,0]))/100.0)
-    yRange = np.arange(np.min(pX[:,1]),np.max(pX[:,1]),np.abs(np.max(pX[:,1])-np.min(pX[:,1]))/100.0)
+    xRange = np.arange(np.min(pX[:,0]), np.max(pX[:, 0]), np.abs(np.max(pX[:,0])-np.min(pX[:,0]))/100.0)
+    yRange = np.arange(np.min(pX[:,1]), np.max(pX[:, 1]), np.abs(np.max(pX[:,1])-np.min(pX[:,1]))/100.0)
 
     grid = np.zeros((yRange.size, xRange.size))
 

@@ -237,7 +237,7 @@ def classifyBoost(X, classifiers, alphas, Nclasses):
     if Ncomps == 1:
         return classifiers[0].classify(X)
     else:
-        votes = np.zeros((Npts,Nclasses))
+        votes = np.zeros((Npts, Nclasses))
 
         # TODO: implement classificiation when we have trained several classifiers!
         # here we can do it by filling in the votes vector with weighted votes
@@ -283,7 +283,7 @@ class BoostClassifier(object):
 
 
 
-testClassifier(BoostClassifier(BayesClassifier(), T=10), dataset='vowel',split=0.7)
+#testClassifier(BoostClassifier(BayesClassifier(), T=10), dataset='vowel',split=0.7)
 
 
 
